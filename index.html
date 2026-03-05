@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>My Bio Link</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#0f0f0f;
+color:white;
+text-align:center;
+margin:0;
+}
+
+.container{
+max-width:420px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:#1c1c1c;
+padding:25px;
+border-radius:20px;
+box-shadow:0 0 15px rgba(0,0,0,0.5);
+}
+
+img{
+width:110px;
+height:110px;
+border-radius:50%;
+object-fit:cover;
+border:3px solid #00c3ff;
+}
+
+input{
+width:90%;
+padding:10px;
+margin:6px;
+border-radius:10px;
+border:none;
+}
+
+button{
+padding:10px 15px;
+border:none;
+border-radius:10px;
+background:#00c3ff;
+color:white;
+margin:5px;
+cursor:pointer;
+}
+
+button:hover{
+background:#0099cc;
+}
+
+.link{
+display:block;
+background:#262626;
+padding:14px;
+margin:10px 0;
+border-radius:12px;
+text-decoration:none;
+color:white;
+font-weight:bold;
+transition:0.2s;
+}
+
+.link:hover{
+transform:scale(1.05);
+background:#00c3ff;
+}
+
+#platformButtons button{
+width:90%;
+background:#262626;
+}
+
+#platformButtons button:hover{
+background:#00c3ff;
+}
+
+.light{
+background:#f2f2f2;
+color:#111;
+}
+
+.light .card{
+background:white;
+}
+
+.light .link{
+background:#e6e6e6;
+color:black;
+}
+
+.light .link:hover{
+background:#00c3ff;
+color:white;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<img id="pp" src="https://via.placeholder.com/110">
+
+<br>
+
+<input type="file" id="uploadPP">
+
+<br>
+
+<input id="nameInput" placeholder="Nama kamu">
+
+<button onclick="saveName()">Simpan Nama</button>
+
+<h2 id="name">Nama Kamu</h2>
+
+<hr>
+
+<h3>Pilih Platform</h3>
+
+<div id="platformButtons">
+
+<button onclick="selectPlatform('YouTube')">▶ YouTube</button>
+
+<button onclick="selectPlatform('TikTok')">🎵 TikTok</button>
+
+<button onclick="selectPlatform('Instagram')">📷 Instagram</button>
+
+<button onclick="selectPlatform('Saluran WhatsApp')">📢 Saluran WA</button>
+
+<button onclick="selectPlatform('Grup WhatsApp')">👥 Grup WA</button>
+
+<button onclick="selectPlatform('Link')">🔗 Link Lain</button>
+
+</div>
+
+<input id="linkURL" placeholder="Masukkan link">
+
+<button onclick="addLink()">Tambah Link</button>
+
+<div id="linkList"></div>
+
+<button onclick="toggleTheme()">🌙 / ☀️ Tema</button>
+
+</div>
+
+</div>
+
+<script>
+
+let links=JSON.parse(localStorage.getItem("links")||"[]")
+let selectedPlatform="Link"
+
+links.forEach(l=>{
+createLink(l.title,l.url)
+})
+
+function selectPlatform(platform){
+
+selectedPlatform=platform
+
+}
+
+function saveName(){
+
+let name=document.getElementById("nameInput").value
+
+localStorage.setItem("name",name)
+
+document.getElementById("name").innerText=name
+
+}
+
+function addLink(){
+
+let url=document.getElementById("linkURL").value
+
+createLink(selectedPlatform,url)
+
+links.push({title:selectedPlatform,url:url})
+
+localStorage.setItem("links",JSON.stringify(links))
+
+}
+
+function createLink(title,url){
+
+let a=document.createElement("a")
+
+a.href=url
+a.className="link"
+a.innerText=title
+a.target="_blank"
+
+document.getElementById("linkList").appendChild(a)
+
+}
+
+document.getElementById("uploadPP").onchange=function(e){
+
+let file=e.target.files[0]
+
+let reader=new FileReader()
+
+reader.onload=function(){
+
+document.getElementById("pp").src=reader.result
+
+localStorage.setItem("pp",reader.result)
+
+}
+
+reader.readAsDataURL(file)
+
+}
+
+function toggleTheme(){
+
+document.body.classList.toggle("light")
+
+if(document.body.classList.contains("light")){
+localStorage.setItem("theme","light")
+}else{
+localStorage.setItem("theme","dark")
+}
+
+}
+
+window.onload=function(){
+
+let name=localStorage.getItem("name")
+let pp=localStorage.getItem("pp")
+let theme=localStorage.getItem("theme")
+
+if(name){
+document.getElementById("name").innerText=name
+}
+
+if(pp){
+document.getElementById("pp").src=pp
+}
+
+if(theme==="light"){
+document.body.classList.add("light")
+}
+
+}
+
+</script>
+
+</body>
+</html>
